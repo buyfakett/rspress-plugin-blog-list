@@ -61,11 +61,13 @@ sidebar: false
 | 属性 | 类型 | 默认值 | 描述 |
 |------|------|--------|------|
 | `rssLink` | boolean | true | 是否显示 RSS 订阅链接 |
+| `blogPath` | string | '/blog/' | 博客文章路径 |
+| `rssPath` | string | '/blog/rss.xml' | RSS 订阅路径 |
 
 #### 示例：关闭 RSS 链接
 
 ```mdx
-<BlogList rssLink={false} />
+<BlogList rssLink={false} blogPath="/blog/" rssPath="/blog/rss.xml" />
 ```
 
 ### 编写博客文章

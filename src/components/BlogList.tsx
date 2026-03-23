@@ -21,16 +21,31 @@ interface BlogListProps {
      * @default true
      */
     rssLink?: boolean;
+    /**
+     * 博客文章路径
+     * @default '/blog/'
+     */
+    blogPath?: string;
+    /**
+     * RSS 订阅路径
+     * @default '/blog/rss.xml'
+     */
+    rssPath?: string;
 }
 
 
-export const useBlogPages = (): BlogItem[] => {
+export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
     const {pages} = usePages();
     const lang = useLang();
 
+    if (!blogPath.trim()) {
+        console.warn('[blog-plugin] blogPath 不能为空，已回退到默认值 /blog/');
+        blogPath = '/blog/';
+    }
+
     return pages
         .filter((page: any) => page.lang === lang)
-        .filter((page: any) => page.routePath.includes('/blog/') && !page.routePath.endsWith('/blog/'))
+        .filter((page: any) => page.routePath.includes(blogPath) && !page.routePath.endsWith(blogPath))
         .map(({frontmatter = {}, routePath, title, ...rest}: any) => {
             const {date, tags, cover, description, summary} = frontmatter as any;
             const finalDate = date;
@@ -57,16 +72,16 @@ export const useBlogPages = (): BlogItem[] => {
         .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const BlogList: React.FC<BlogListProps> = ({rssLink = true}) => {
+export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/blog/', rssPath = '/blog/rss.xml'}) => {
     const {h2: H2, p: P, a: A, hr: Hr} = getCustomMDXComponent();
-    const blogPages = useBlogPages();
+    const blogPages = useBlogPages(blogPath);
     const lang = useLang();
 
     return (
         <>
             {rssLink && (
                 <div style={{marginTop: '2em'}}>
-                    <RssSubscriptionLink/>
+                    <RssSubscriptionLink rssPath={rssPath}/>
                 </div>
             )}
             <div className={styles.blogList}>
