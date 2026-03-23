@@ -31,6 +31,11 @@ interface BlogListProps {
      * @default '/blog/rss.xml'
      */
     rssPath?: string;
+    /**
+     * 是否在新标签页打开链接
+     * @default false
+     */
+    openInNewTab?: boolean;
 }
 
 
@@ -72,7 +77,7 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
         .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/blog/', rssPath = '/blog/rss.xml'}) => {
+export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/blog/', rssPath = '/blog/rss.xml', openInNewTab = false}) => {
     const {h2: H2, p: P, a: A, hr: Hr} = getCustomMDXComponent();
     const blogPages = useBlogPages(blogPath);
     const lang = useLang();
@@ -117,7 +122,7 @@ export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/
                                         </div>
                                     </div>
                                     {description && (
-                                        <p onClick={() => window.open(link, '_blank')} className={styles.description}>
+                                        <p onClick={() => window.open(link, openInNewTab ? '_blank' : '')} className={styles.description}>
                                             {description}
                                         </p>
                                     )}
