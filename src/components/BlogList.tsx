@@ -38,6 +38,11 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
     const {pages} = usePages();
     const lang = useLang();
 
+    if (!blogPath || typeof blogPath !== 'string' || blogPath.trim() === '') {
+        console.warn('[blog-plugin] blogPath 不能为空，已回退到默认值 /blog/');
+        blogPath = '/blog/';
+    }
+
     return pages
         .filter((page: any) => page.lang === lang)
         .filter((page: any) => page.routePath.includes(blogPath) && !page.routePath.endsWith(blogPath))
