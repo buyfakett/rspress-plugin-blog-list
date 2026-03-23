@@ -56,6 +56,18 @@ sidebar: false
 <BlogList />
 ```
 
+### 组件属性
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `rssLink` | boolean | true | 是否显示 RSS 订阅链接 |
+
+#### 示例：关闭 RSS 链接
+
+```mdx
+<BlogList rssLink={false} />
+```
+
 ### 编写博客文章
 在 `docs/blog/` 目录下创建你的 Markdown 文章。
 文章的 frontmatter 格式要求如下：
