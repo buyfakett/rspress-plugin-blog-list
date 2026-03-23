@@ -25,9 +25,9 @@ import { defineConfig } from 'rspress/config';
 import { pluginBlogList } from 'rspress-plugin-blog-list';
 
 export default defineConfig({
-  plugins: [
-    pluginBlogList()
-  ]
+    plugins: [
+        pluginBlogList()
+    ]
 });
 ```
 
@@ -58,11 +58,12 @@ sidebar: false
 
 ### 组件属性
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| `rssLink` | boolean | true | 是否显示 RSS 订阅链接 |
-| `blogPath` | string | '/blog/' | 博客文章路径 |
-| `rssPath` | string | '/blog/rss.xml' | RSS 订阅路径 |
+| 属性             | 类型      | 默认值             | 描述            |
+|----------------|---------|-----------------|---------------|
+| `rssLink`      | boolean | true            | 是否显示 RSS 订阅链接 |
+| `blogPath`     | string  | '/blog/'        | 博客文章路径        |
+| `rssPath`      | string  | '/blog/rss.xml' | RSS 订阅路径      |
+| `openInNewTab` | boolean | false           | 是否新开页面        |
 
 #### 示例：关闭 RSS 链接
 
@@ -71,6 +72,7 @@ sidebar: false
 ```
 
 ### 编写博客文章
+
 在 `docs/blog/` 目录下创建你的 Markdown 文章。
 文章的 frontmatter 格式要求如下：
 
