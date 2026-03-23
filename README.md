@@ -22,11 +22,11 @@ pnpm add rspress-plugin-blog-list
 
 ```typescript
 import { defineConfig } from 'rspress/config';
-import { pluginBlog } from 'rspress-plugin-blog-list';
+import { pluginBlogList } from 'rspress-plugin-blog-list';
 
 export default defineConfig({
   plugins: [
-    pluginBlog()
+    pluginBlogList()
   ]
 });
 ```

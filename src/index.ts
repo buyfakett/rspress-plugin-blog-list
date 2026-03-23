@@ -5,7 +5,7 @@ import path from 'path';
 /**
  * Rspress plugin for adding an automatic blog page
  */
-export function pluginBlog(): RspressPlugin {
+export function pluginBlogList(): RspressPlugin {
     return {
         name: 'rspress-plugin-blog-list',
 
@@ -18,4 +18,4 @@ export function pluginBlog(): RspressPlugin {
     };
 }
 
-export default pluginBlog;
+export default pluginBlogList;
