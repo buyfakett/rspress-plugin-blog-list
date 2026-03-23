@@ -38,7 +38,7 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
     const {pages} = usePages();
     const lang = useLang();
 
-    if (!blogPath || typeof blogPath !== 'string' || blogPath.trim() === '') {
+    if (!blogPath.trim()) {
         console.warn('[blog-plugin] blogPath 不能为空，已回退到默认值 /blog/');
         blogPath = '/blog/';
     }
