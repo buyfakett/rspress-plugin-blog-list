@@ -48,16 +48,18 @@ export const useBlogPages = (): BlogItem[] => {
         .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const BlogList: React.FC = () => {
+export const BlogList: React.FC<{ rssLink?: boolean }> = ({rssLink = true}) => {
     const {h2: H2, p: P, a: A, hr: Hr} = getCustomMDXComponent();
     const blogPages = useBlogPages();
     const lang = useLang();
 
     return (
         <>
-            <div style={{marginTop: '2em'}}>
-                <RssSubscriptionLink/>
-            </div>
+            {rssLink && (
+                <div style={{marginTop: '2em'}}>
+                    <RssSubscriptionLink/>
+                </div>
+            )}
             <div className={styles.blogList}>
                 {blogPages.map(({title, date, description, tags, cover, link}, index) => {
                     const isEven = index % 2 === 0;
