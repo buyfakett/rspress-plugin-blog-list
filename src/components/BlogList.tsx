@@ -31,6 +31,11 @@ interface BlogListProps {
      * @default '/blog/rss.xml'
      */
     rssPath?: string;
+    /**
+     * 是否在新标签页打开链接
+     * @default false
+     */
+    openInNewTab?: boolean;
 }
 
 
@@ -72,10 +77,11 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
         .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/blog/', rssPath = '/blog/rss.xml'}) => {
-    const {h2: H2, p: P, a: A, hr: Hr} = getCustomMDXComponent();
+export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/blog/', rssPath = '/blog/rss.xml', openInNewTab = false}) => {
+    const {h2: H2, a: A, hr: Hr} = getCustomMDXComponent();
     const blogPages = useBlogPages(blogPath);
     const lang = useLang();
+    const target = openInNewTab ? '_blank' : '_self';
 
     return (
         <>
@@ -94,17 +100,17 @@ export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/
                                 {cover && (
                                     <div
                                         className={styles.coverWrapper}
-                                        onClick={() => window.open(link, '_blank')}
+                                        onClick={() => window.open(link, target)}
                                     >
                                         <img src={cover} alt={title} className={styles.cover}/>
                                     </div>
                                 )}
                                 <div className={styles.content}>
                                     <H2 id={link}>
-                                        <A href={link} target="_blank" rel="noopener noreferrer">{title}</A>
+                                        <A href={link} target={target} rel={openInNewTab ? 'noopener noreferrer' : undefined}>{title}</A>
                                     </H2>
                                     <div className={styles.meta}>
-                                        <div onClick={() => window.open(link, '_blank')} className={styles.date}>
+                                        <div onClick={() => window.open(link, target)} className={styles.date}>
                                             {new Intl.DateTimeFormat(lang, {
                                                 year: 'numeric',
                                                 month: 'long',
@@ -117,7 +123,7 @@ export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/
                                         </div>
                                     </div>
                                     {description && (
-                                        <p onClick={() => window.open(link, '_blank')} className={styles.description}>
+                                        <p onClick={() => window.open(link, target)} className={styles.description}>
                                             {description}
                                         </p>
                                     )}
