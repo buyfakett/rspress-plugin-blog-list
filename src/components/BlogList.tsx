@@ -122,7 +122,7 @@ export const BlogList: React.FC<BlogListProps> = ({rssLink = true, blogPath = '/
                                         </div>
                                     </div>
                                     {description && (
-                                        <p onClick={() => window.open(link, openInNewTab ? '_blank' : '')} className={styles.description}>
+                                        <p onClick={() => window.open(link, openInNewTab ? '_blank' : '_self')} className={styles.description}>
                                             {description}
                                         </p>
                                     )}
