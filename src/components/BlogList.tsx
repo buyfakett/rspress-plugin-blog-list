@@ -15,6 +15,15 @@ export interface BlogItem {
     link: string;
 }
 
+interface BlogListProps {
+    /**
+     * 是否显示 RSS 订阅链接
+     * @default true
+     */
+    rssLink?: boolean;
+}
+
+
 export const useBlogPages = (): BlogItem[] => {
     const {pages} = usePages();
     const lang = useLang();
@@ -48,7 +57,7 @@ export const useBlogPages = (): BlogItem[] => {
         .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const BlogList: React.FC<{ rssLink?: boolean }> = ({rssLink = true}) => {
+export const BlogList: React.FC<BlogListProps> = ({rssLink = true}) => {
     const {h2: H2, p: P, a: A, hr: Hr} = getCustomMDXComponent();
     const blogPages = useBlogPages();
     const lang = useLang();
