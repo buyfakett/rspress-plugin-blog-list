@@ -7,8 +7,8 @@ Rspress v2 插件，用于在网站中展示博客文章列表。
 - **全局组件**: 自动注册 `<BlogList />` 组件，你可以在任何 MDX 文件中直接使用
 - **元数据提取**: 自动提取 Markdown 文件中的 frontmatter（包括日期、摘要、标签、封面等）
 - **Rss 支持**: 内置 RSS 订阅按钮和样式
-- **双样式模式**: 支持 `card`（卡片式）和 `list`（列表式）两种 UI 风格
-- **交互效果**: 卡片模式下支持 3D 倾斜和流光边框动画
+- **双样式模式**: 支持 `modern`（现代卡片式）和 `simple`（简约列表式）两种 UI 风格
+- **交互效果**: 现代模式下支持 3D 倾斜和流光边框动画
 
 ## 安装
 
@@ -60,20 +60,20 @@ sidebar: false
 
 ### 组件属性
 
-| 属性             | 类型              | 默认值             | 描述                                                         |
-|----------------|-----------------|-----------------|------------------------------------------------------------|
-| `rssLink`      | boolean         | true            | 是否显示 RSS 订阅链接                                            |
-| `blogPath`     | string          | '/blog/'        | 博客文章路径                                                    |
-| `rssPath`      | string          | '/blog/rss.xml' | RSS 订阅路径                                                  |
-| `openInNewTab` | boolean         | false           | 是否新开页面                                                    |
-| `variant`      | 'card' \| 'list' | 'card'          | UI 风格，`card` 为毛玻璃卡片式，`list` 为经典列表式                        |
-| `featured`     | boolean         | true            | 卡片模式下是否将第一篇文章置顶展示为 Featured 大卡片（仅 `variant="card"` 时生效）    |
-| `interactive`  | boolean         | true            | 卡片模式下是否启用 3D 倾斜和流光边框交互效果（仅 `variant="card"` 时生效，触屏设备自动禁用） |
+| 属性             | 类型                   | 默认值             | 描述                                                          |
+|----------------|----------------------|-----------------|-------------------------------------------------------------|
+| `rssLink`      | boolean              | true            | 是否显示 RSS 订阅链接                                               |
+| `blogPath`     | string               | '/blog/'        | 博客文章路径                                                      |
+| `rssPath`      | string               | '/blog/rss.xml' | RSS 订阅路径                                                    |
+| `openInNewTab` | boolean              | false           | 是否新开页面                                                      |
+| `variant`      | 'modern' \| 'simple' | 'modern'        | UI 风格，`modern` 为毛玻璃卡片式，`simple` 为简约列表式                      |
+| `featured`     | boolean              | true            | 现代模式下是否将第一篇文章置顶展示为 Featured 大卡片（仅 `variant="modern"` 时生效）   |
+| `interactive`  | boolean              | true            | 现代模式下是否启用 3D 倾斜和流光边框交互效果（仅 `variant="modern"` 时生效，触屏设备自动禁用） |
 
-#### 示例：使用经典列表样式
+#### 示例：使用简约列表样式
 
 ```mdx
-<BlogList variant="list" />
+<BlogList variant="simple" />
 ```
 
 #### 示例：关闭 RSS 链接

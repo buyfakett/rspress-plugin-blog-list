@@ -24,7 +24,7 @@ interface BlogListProps {
     openInNewTab?: boolean;
     featured?: boolean;
     interactive?: boolean;
-    variant?: 'card' | 'list';
+    variant?: 'modern' | 'simple';
 }
 
 const getClassName = (...classNames: Array<string | false | undefined>) => {
@@ -126,7 +126,7 @@ function BlogCard({post, isFeatured, index, interactive, lang, target}: BlogCard
             )}
             <div className={styles.cardContent}>
                 <span className={styles.date}>{formattedDate}</span>
-                <div className={titleClassName}>{post.title}</div>
+                <h2 id={post.link} className={titleClassName}>{post.title}</h2>
                 {post.description && (
                     <div className={descriptionClassName}>{post.description}</div>
                 )}
@@ -163,7 +163,7 @@ function BlogCard({post, isFeatured, index, interactive, lang, target}: BlogCard
     return <article className={cardClassName}>{cardContent}</article>;
 }
 
-function LegacyBlogList({
+function SimpleBlogList({
                             blogPages,
                             rssLink,
                             rssPath,
@@ -187,29 +187,29 @@ function LegacyBlogList({
                     <RssSubscriptionLink rssPath={rssPath}/>
                 </div>
             )}
-            <div className={styles.legacyList}>
+            <div className={styles.simpleList}>
                 {blogPages.map(({title, date, description, tags, cover, link}, index) => {
                     const isEven = index % 2 === 0;
                     return (
                         <React.Fragment key={link}>
                             <article
-                                className={`${styles.legacyBlogItem} ${isEven ? styles.legacyEven : styles.legacyOdd} ${cover ? styles.legacyHasCover : ''}`}
+                                className={`${styles.simpleBlogItem} ${isEven ? styles.simpleEven : styles.simpleOdd} ${cover ? styles.simpleHasCover : ''}`}
                             >
                                 {cover && (
                                     <div
-                                        className={styles.legacyCoverWrapper}
+                                        className={styles.simpleCoverWrapper}
                                         onClick={() => window.open(link, target)}
                                     >
-                                        <img src={cover} alt={title} className={styles.legacyCover}/>
+                                        <img src={cover} alt={title} className={styles.simpleCover}/>
                                     </div>
                                 )}
-                                <div className={styles.legacyContent}>
+                                <div className={styles.simpleContent}>
                                     <H2 id={link}>
                                         <A href={link} target={target}
                                            rel={openInNewTab ? 'noopener noreferrer' : undefined}>{title}</A>
                                     </H2>
-                                    <div className={styles.legacyMeta}>
-                                        <div onClick={() => window.open(link, target)} className={styles.legacyDate}>
+                                    <div className={styles.simpleMeta}>
+                                        <div onClick={() => window.open(link, target)} className={styles.simpleDate}>
                                             {new Intl.DateTimeFormat(lang, {
                                                 year: 'numeric',
                                                 month: 'long',
@@ -223,14 +223,14 @@ function LegacyBlogList({
                                     </div>
                                     {description && (
                                         <p onClick={() => window.open(link, target)}
-                                           className={styles.legacyDescription}>
+                                           className={styles.simpleDescription}>
                                             {description}
                                         </p>
                                     )}
                                     {tags && tags.length > 0 && (
-                                        <div className={styles.legacyTags}>
+                                        <div className={styles.simpleTags}>
                                             {tags.map(tag => (
-                                                <span key={tag} className={styles.legacyTag}>
+                                                <span key={tag} className={styles.simpleTag}>
                                                     #{tag}
                                                 </span>
                                             ))}
@@ -254,15 +254,15 @@ export const BlogList: React.FC<BlogListProps> = ({
                                                       openInNewTab = false,
                                                       featured = true,
                                                       interactive = true,
-                                                      variant = 'card',
+                                                      variant = 'modern',
                                                   }) => {
     const blogPages = useBlogPages(blogPath);
     const lang = useLang();
     const target = openInNewTab ? '_blank' : '_self';
 
-    if (variant === 'list') {
+    if (variant === 'simple') {
         return (
-            <LegacyBlogList
+            <SimpleBlogList
                 blogPages={blogPages}
                 rssLink={rssLink}
                 rssPath={rssPath}
