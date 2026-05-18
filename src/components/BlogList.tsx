@@ -39,7 +39,7 @@ const isTouchDevice = () => {
 };
 
 export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
-    const { pages } = usePages();
+    const {pages} = usePages();
     const lang = useLang();
 
     if (!blogPath.trim()) {
@@ -50,8 +50,8 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
     return pages
         .filter((page: any) => page.lang === lang)
         .filter((page: any) => page.routePath.includes(blogPath) && !page.routePath.endsWith(blogPath))
-        .map(({ frontmatter = {}, routePath, title, ...rest }: any) => {
-            const { date, tags, cover, description, summary } = frontmatter as any;
+        .map(({frontmatter = {}, routePath, title, ...rest}: any) => {
+            const {date, tags, cover, description, summary} = frontmatter as any;
             const finalDate = date;
 
             if (!finalDate) {
@@ -79,14 +79,16 @@ export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
 type BlogCardProps = {
     post: BlogItem;
     isFeatured: boolean;
+    index: number;
     interactive: boolean;
     lang: string;
     target: string;
 };
 
-function BlogCard({ post, isFeatured, interactive, lang, target }: BlogCardProps) {
+function BlogCard({post, isFeatured, index, interactive, lang, target}: BlogCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const isInteractive = interactive && Boolean(post.link);
+    const isEven = index % 2 === 0;
 
     const formattedDate = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : lang, {
         year: 'numeric',
@@ -97,6 +99,9 @@ function BlogCard({ post, isFeatured, interactive, lang, target }: BlogCardProps
     const cardClassName = getClassName(
         styles.card,
         isFeatured ? styles.featured : styles.normalCard,
+        !isFeatured && isEven && styles.cardEven,
+        !isFeatured && !isEven && styles.cardOdd,
+        !isFeatured && post.cover && styles.cardHasCover,
         isInteractive && styles.interactiveCard,
     );
 
@@ -116,24 +121,26 @@ function BlogCard({ post, isFeatured, interactive, lang, target }: BlogCardProps
         <>
             {post.cover && (
                 <div className={coverWrapperClassName}>
-                    <img src={post.cover} alt={post.title} />
+                    <img src={post.cover} alt={post.title}/>
                 </div>
             )}
-            <span className={styles.date}>{formattedDate}</span>
-            <div className={titleClassName}>{post.title}</div>
-            {post.description && (
-                <div className={descriptionClassName}>{post.description}</div>
-            )}
-            {post.tags && post.tags.length > 0 && (
-                <div className={styles.tags}>
-                    {post.tags.map(tag => (
-                        <span key={tag} className={styles.tag}>
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-            )}
-            {isInteractive && isHovered ? <BorderBeam size={2} duration={3} /> : null}
+            <div className={styles.cardContent}>
+                <span className={styles.date}>{formattedDate}</span>
+                <div className={titleClassName}>{post.title}</div>
+                {post.description && (
+                    <div className={descriptionClassName}>{post.description}</div>
+                )}
+                {post.tags && post.tags.length > 0 && (
+                    <div className={styles.tags}>
+                        {post.tags.map(tag => (
+                            <span key={tag} className={styles.tag}>
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+            </div>
+            {isInteractive && isHovered ? <BorderBeam size={2} duration={3}/> : null}
         </>
     );
 
@@ -157,13 +164,13 @@ function BlogCard({ post, isFeatured, interactive, lang, target }: BlogCardProps
 }
 
 function LegacyBlogList({
-    blogPages,
-    rssLink,
-    rssPath,
-    target,
-    openInNewTab,
-    lang,
-}: {
+                            blogPages,
+                            rssLink,
+                            rssPath,
+                            target,
+                            openInNewTab,
+                            lang,
+                        }: {
     blogPages: BlogItem[];
     rssLink: boolean;
     rssPath: string;
@@ -171,17 +178,17 @@ function LegacyBlogList({
     openInNewTab: boolean;
     lang: string;
 }) {
-    const { h2: H2, a: A, hr: Hr } = getCustomMDXComponent();
+    const {h2: H2, a: A} = getCustomMDXComponent();
 
     return (
         <>
             {rssLink && (
-                <div style={{ marginTop: '2em' }}>
-                    <RssSubscriptionLink rssPath={rssPath} />
+                <div style={{marginTop: '2em'}}>
+                    <RssSubscriptionLink rssPath={rssPath}/>
                 </div>
             )}
             <div className={styles.legacyList}>
-                {blogPages.map(({ title, date, description, tags, cover, link }, index) => {
+                {blogPages.map(({title, date, description, tags, cover, link}, index) => {
                     const isEven = index % 2 === 0;
                     return (
                         <React.Fragment key={link}>
@@ -193,12 +200,13 @@ function LegacyBlogList({
                                         className={styles.legacyCoverWrapper}
                                         onClick={() => window.open(link, target)}
                                     >
-                                        <img src={cover} alt={title} className={styles.legacyCover} />
+                                        <img src={cover} alt={title} className={styles.legacyCover}/>
                                     </div>
                                 )}
                                 <div className={styles.legacyContent}>
                                     <H2 id={link}>
-                                        <A href={link} target={target} rel={openInNewTab ? 'noopener noreferrer' : undefined}>{title}</A>
+                                        <A href={link} target={target}
+                                           rel={openInNewTab ? 'noopener noreferrer' : undefined}>{title}</A>
                                     </H2>
                                     <div className={styles.legacyMeta}>
                                         <div onClick={() => window.open(link, target)} className={styles.legacyDate}>
@@ -214,7 +222,8 @@ function LegacyBlogList({
                                         </div>
                                     </div>
                                     {description && (
-                                        <p onClick={() => window.open(link, target)} className={styles.legacyDescription}>
+                                        <p onClick={() => window.open(link, target)}
+                                           className={styles.legacyDescription}>
                                             {description}
                                         </p>
                                     )}
@@ -229,7 +238,7 @@ function LegacyBlogList({
                                     )}
                                 </div>
                             </article>
-                            {index < blogPages.length - 1 && <Hr className={styles.divider} />}
+                            {index < blogPages.length - 1 && <div className={styles.divider}/>}
                         </React.Fragment>
                     );
                 })}
@@ -239,14 +248,14 @@ function LegacyBlogList({
 }
 
 export const BlogList: React.FC<BlogListProps> = ({
-    rssLink = true,
-    blogPath = '/blog/',
-    rssPath = '/blog/rss.xml',
-    openInNewTab = false,
-    featured = true,
-    interactive = true,
-    variant = 'card',
-}) => {
+                                                      rssLink = true,
+                                                      blogPath = '/blog/',
+                                                      rssPath = '/blog/rss.xml',
+                                                      openInNewTab = false,
+                                                      featured = true,
+                                                      interactive = true,
+                                                      variant = 'card',
+                                                  }) => {
     const blogPages = useBlogPages(blogPath);
     const lang = useLang();
     const target = openInNewTab ? '_blank' : '_self';
@@ -288,7 +297,7 @@ export const BlogList: React.FC<BlogListProps> = ({
         <div className={styles.blogPage}>
             {rssLink && (
                 <div className={styles.rssWrapper}>
-                    <RssSubscriptionLink rssPath={rssPath} />
+                    <RssSubscriptionLink rssPath={rssPath}/>
                 </div>
             )}
             <div className={styles.cardList}>
@@ -296,16 +305,18 @@ export const BlogList: React.FC<BlogListProps> = ({
                     <BlogCard
                         post={featuredPost}
                         isFeatured
+                        index={0}
                         interactive={interactive}
                         lang={lang}
                         target={target}
                     />
                 ) : null}
-                {restPosts.length > 0 ? restPosts.map((post) => (
+                {restPosts.length > 0 ? restPosts.map((post, index) => (
                     <BlogCard
                         key={post.link}
                         post={post}
                         isFeatured={false}
+                        index={featured ? index + 1 : index}
                         interactive={interactive}
                         lang={lang}
                         target={target}

@@ -2,12 +2,12 @@
     html:not(.dark) {
         --rs-blog-list-title-color: var(--rp-c-text-0);
         --rs-blog-list-desc-color: var(--rp-c-text-2);
-        --rs-blog-list-card-bg:
-            radial-gradient(94.38% 84.84% at 0% 2.15%, #ffffff29 0%, #fff0 100%),
-            #ffffff9c;
+        --rs-blog-list-card-bg: radial-gradient(94.38% 84.84% at 0% 2.15%, #ffffff29 0%, #fff0 100%),
+        #ffffff9c;
         --rs-blog-list-card-border: 1px solid #0e0e0f16;
         --rs-blog-list-card-shadow: 0 4px 24px #0e0e0f09;
     }
+
     html.dark {
         --rs-blog-list-title-color: var(--rp-c-text-0);
         --rs-blog-list-desc-color: var(--rp-c-text-2);
@@ -40,7 +40,6 @@
 .card {
     position: relative;
     display: flex;
-    flex-direction: column;
     border-radius: 24px;
     background: var(--rs-blog-list-card-bg);
     backdrop-filter: blur(2px);
@@ -72,6 +71,7 @@
 }
 
 .featured {
+    flex-direction: column;
     padding: 32px 36px;
 }
 
@@ -117,7 +117,9 @@
 }
 
 .normalCard {
+    flex-direction: column;
     padding: 28px 32px;
+    gap: 1.5rem;
 }
 
 .normalCoverWrapper {
@@ -125,8 +127,8 @@
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: 12px;
-    margin-bottom: 16px;
     background-color: var(--rp-c-bg-soft);
+    flex-shrink: 0;
 }
 
 .normalCoverWrapper img {
@@ -138,6 +140,13 @@
 
 .interactiveCard:hover .normalCoverWrapper img {
     transform: scale(1.05);
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
 }
 
 .date {
@@ -184,6 +193,46 @@
     background: var(--rp-c-brand-dimm);
 }
 
+@media (min-width: 768px) {
+    .normalCard {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .normalCard .normalCoverWrapper {
+        width: 280px;
+        height: 160px;
+        aspect-ratio: unset;
+    }
+
+    .cardEven .normalCoverWrapper {
+        order: 1;
+        margin-right: 1.5rem;
+    }
+
+    .cardEven .cardContent {
+        order: 2;
+    }
+
+    .cardOdd .normalCoverWrapper {
+        order: 2;
+        margin-left: 1.5rem;
+    }
+
+    .cardOdd .cardContent {
+        order: 1;
+    }
+
+    .normalCard:not(.cardHasCover) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .normalCard:not(.cardHasCover) .cardContent {
+        width: 100%;
+    }
+}
+
 /* ── Legacy List Variant ── */
 
 .legacyList {
@@ -196,7 +245,11 @@
 
 .divider {
     margin: 0;
-    border: 1px solid var(--rp-c-divider);
+    border: none;
+    border-top: 1px solid var(--rp-c-divider);
+    height: 0;
+    padding: 0;
+    background: none;
 }
 
 .legacyBlogItem {
