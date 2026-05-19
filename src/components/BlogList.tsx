@@ -238,7 +238,7 @@ function SimpleBlogList({
                                     )}
                                 </div>
                             </article>
-                            {index < blogPages.length - 1 && <div className={styles.divider}/>}
+                            {index < blogPages.length - 1 && <Hr className={styles.divider}/>}
                         </React.Fragment>
                     );
                 })}
