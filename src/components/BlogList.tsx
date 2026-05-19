@@ -2,7 +2,7 @@
 import { useLang, usePages } from '@rspress/core/runtime';
 // @ts-ignore
 import { getCustomMDXComponent } from '@rspress/core/theme';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Blog.module.css';
 import { RssSubscriptionLink } from './rssLink';
 import { BorderBeam } from './BorderBeam';
@@ -126,7 +126,7 @@ function BlogCard({post, isFeatured, index, interactive, lang, target}: BlogCard
             )}
             <div className={styles.cardContent}>
                 <span className={styles.date}>{formattedDate}</span>
-                <h2 id={post.link} className={titleClassName}>{post.title}</h2>
+                <h2 id={post.link} className={`${titleClassName} rp-toc-include`}>{post.title}</h2>
                 {post.description && (
                     <div className={descriptionClassName}>{post.description}</div>
                 )}
@@ -244,6 +244,58 @@ function SimpleBlogList({
                 })}
             </div>
         </>
+    );
+}
+
+function BlogToc({blogPages}: { blogPages: BlogItem[] }) {
+    const [activeId, setActiveId] = useState<string>('');
+
+    useEffect(() => {
+        if (blogPages.length === 0) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        setActiveId(entry.target.id);
+                    }
+                }
+            },
+            {rootMargin: '-80px 0px -70% 0px'},
+        );
+
+        blogPages.forEach(page => {
+            const el = document.getElementById(page.link);
+            if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, [blogPages]);
+
+    const scrollTo = (id: string) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    };
+
+    if (blogPages.length === 0) return null;
+
+    return (
+        <div className={styles.blogToc}>
+            <div className={styles.blogTocTitle}>ON THIS PAGE</div>
+            <nav className={styles.blogTocList}>
+                {blogPages.map(page => (
+                    <div
+                        key={page.link}
+                        className={`${styles.blogTocItem} ${activeId === page.link ? styles.blogTocItemActive : ''}`}
+                        onClick={() => scrollTo(page.link)}
+                    >
+                        <span className={styles.blogTocItemText}>{page.title}</span>
+                    </div>
+                ))}
+            </nav>
+        </div>
     );
 }
 

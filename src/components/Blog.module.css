@@ -21,6 +21,81 @@
     position: relative;
 }
 
+.blogContent {
+    display: flex;
+    gap: 2rem;
+}
+
+.blogToc {
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: calc(var(--rp-nav-height, 60px) + var(--rp-banner-height, 0px) + 32px);
+    max-height: calc(100vh - var(--rp-nav-height, 60px) - var(--rp-banner-height, 0px) - 64px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    border-left: 1px solid var(--rp-c-divider-light);
+    padding-left: 20px;
+    --rs-blog-toc-padding-x: 20px;
+}
+
+.blogToc::-webkit-scrollbar {
+    display: none;
+}
+
+.blogTocTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rp-c-text-1);
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 12px;
+}
+
+.blogTocList {
+    display: flex;
+    flex-direction: column;
+}
+
+.blogTocItem {
+    position: relative;
+    padding: 6px 0;
+    cursor: pointer;
+    line-height: 1.4;
+    margin-top: 10px;
+}
+
+.blogTocItem:first-child {
+    margin-top: 0;
+}
+
+.blogTocItemText {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--rp-c-text-2);
+    overflow-wrap: break-word;
+    transition: color 0.2s;
+}
+
+.blogTocItem:hover .blogTocItemText {
+    color: var(--rp-c-text-1);
+}
+
+.blogTocItemActive .blogTocItemText {
+    color: var(--rp-c-link);
+}
+
+.blogTocItemActive::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 1px;
+    background-color: var(--rp-c-brand);
+    position: absolute;
+    left: calc(-1 * var(--rs-blog-toc-padding-x));
+    top: 0;
+}
+
 .blogPage h2:before {
     display: none;
 }
