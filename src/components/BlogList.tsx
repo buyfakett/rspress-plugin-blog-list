@@ -178,7 +178,7 @@ function SimpleBlogList({
     openInNewTab: boolean;
     lang: string;
 }) {
-    const {h2: H2, a: A} = getCustomMDXComponent();
+    const {h2: H2, a: A, hr: Hr} = getCustomMDXComponent();
 
     return (
         <>
