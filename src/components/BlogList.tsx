@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useLang, usePages } from '@rspress/core/runtime';
+import { useLang, usePages, useSite } from '@rspress/core/runtime';
 // @ts-ignore
 import { getCustomMDXComponent } from '@rspress/core/theme';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -38,42 +38,75 @@ const isTouchDevice = () => {
     return window.matchMedia('(pointer: coarse)').matches;
 };
 
+const normalizeBlogPath = (blogPath: string) => {
+    const trimmedPath = blogPath.trim();
+
+    if (!trimmedPath) {
+        return '/blog/';
+    }
+
+    const withLeadingSlash = trimmedPath.startsWith('/') ? trimmedPath : `/${trimmedPath}`;
+
+    return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+};
+
+const routeMatchesBlogPath = (routePath: string, blogPath: string) => {
+    return routePath.includes(blogPath) && !routePath.endsWith(blogPath);
+};
+
+const getFallbackSummary = (title: string, lang: string) => {
+    if (lang === 'zh') {
+        return `这是一篇关于"${title}"的文章。点击阅读更多了解详细内容。`;
+    }
+
+    return `An article about "${title}". Open it to read the full post.`;
+};
+
 export const useBlogPages = (blogPath: string = '/blog/'): BlogItem[] => {
     const {pages} = usePages();
     const lang = useLang();
+    const {site} = useSite();
+    const defaultLang = site?.lang || 'en';
 
     if (!blogPath.trim()) {
         console.warn('[blog-plugin] blogPath 不能为空，已回退到默认值 /blog/');
-        blogPath = '/blog/';
     }
 
-    return pages
-        .filter((page: any) => page.lang === lang)
-        .filter((page: any) => page.routePath.includes(blogPath) && !page.routePath.endsWith(blogPath))
-        .map(({frontmatter = {}, routePath, title, ...rest}: any) => {
-            const {date, tags, cover, description, summary} = frontmatter as any;
-            const finalDate = date;
+    const normalizedBlogPath = normalizeBlogPath(blogPath);
+    const collectBlogPages = (targetLang: string) => {
+        return pages
+            .filter((page: any) => page.lang === targetLang)
+            .filter((page: any) => routeMatchesBlogPath(page.routePath, normalizedBlogPath))
+            .map(({frontmatter = {}, routePath, title}: any) => {
+                const {date, tags, cover, description, summary} = frontmatter as any;
+                const finalDate = date;
 
-            if (!finalDate) {
-                return null;
-            }
+                if (!finalDate) {
+                    return null;
+                }
 
-            let finalSummary = summary || description;
-            if (!finalSummary) {
-                finalSummary = `这是一篇关于"${title}"的文章。点击阅读更多了解详细内容。`;
-            }
+                const finalSummary = summary || description || getFallbackSummary(title, lang);
 
-            return {
-                title: title,
-                date: String(finalDate),
-                description: finalSummary,
-                tags: Array.isArray(tags) ? tags : undefined,
-                cover,
-                link: routePath,
-            };
-        })
-        .filter((item: any): item is BlogItem => item !== null)
-        .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                return {
+                    title: title,
+                    date: String(finalDate),
+                    description: finalSummary,
+                    tags: Array.isArray(tags) ? tags : undefined,
+                    cover,
+                    link: routePath,
+                };
+            })
+            .filter((item: any): item is BlogItem => item !== null)
+            .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    };
+
+    const blogPages = collectBlogPages(lang);
+
+    if (blogPages.length > 0 || lang === defaultLang) {
+        return blogPages;
+    }
+
+    return collectBlogPages(defaultLang);
 };
 
 type BlogCardProps = {
