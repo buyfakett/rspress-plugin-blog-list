@@ -1,44 +1,13 @@
 import React from "react";
-// @ts-ignore
-import { useDark } from "@rspress/core/runtime";
+import styles from './Blog.module.css';
 
 export const RssSubscriptionLink: React.FC<{ rssPath: string }> = ({ rssPath }) => {
-    // 获取暗黑模式状态
-    // Get dark mode status
-    const isDark = useDark();
-
-    // 根据暗黑模式状态设置样式
-    // Set styles based on dark mode status
-    const buttonStyle = {
-        display: 'inline-flex' as const,
-        alignItems: 'center' as const,
-        gap: '8px' as const,
-        padding: '8px 12px' as const,
-        backgroundColor: isDark ? '#333' : '#f5f5f5',
-        borderRadius: '4px' as const,
-        textDecoration: 'none' as const,
-        color: isDark ? '#f5f5f5' : '#333',
-        fontSize: '14px' as const,
-        transition: 'background-color 0.3s ease' as const
-    };
-
-    // 根据暗黑模式状态设置悬停样式
-    // Set hover styles based on dark mode status
-    const hoverBackgroundColor = isDark ? '#444' : '#e8e8e8';
-    const normalBackgroundColor = isDark ? '#333' : '#f5f5f5';
-
     return (
         <a
             href={rssPath}
             target="_blank"
             rel="noopener noreferrer"
-            style={buttonStyle}
-            onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.backgroundColor = hoverBackgroundColor;
-            }}
-            onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.backgroundColor = normalBackgroundColor;
-            }}
+            className={styles.rssLink}
         >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
